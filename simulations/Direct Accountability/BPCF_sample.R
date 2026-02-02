@@ -1,13 +1,19 @@
-BPCF_sample <- function(data_sample, n, seed) {
+BPCF_sample <- function(data_sample, n, seed, scenario1 = T) {
   set.seed(seed)
   n.iter <- 10000
   
   # Data 
-  Xpred <- data_sample[[seed]]$Xpred
-  Y_trt <- data_sample[[seed]]$Y_trt
-  M_out <- data_sample[[seed]]$M_out
-  Y_out <- data_sample[[seed]]$Y_out
-  
+  if (scenario1){
+    Xpred <- data_sample[[seed]]$Xpred
+    Y_trt <- data_sample[[seed]]$Y_trt
+    M_out <- data_sample[[seed]]$M_out
+    Y_out <- data_sample[[seed]]$Y_out
+  } else {
+    Xpred <- data_sample[[seed]]$data$X
+    Y_trt <- data_sample[[seed]]$data$T
+    M_out <- Y_trt * data_sample[[seed]]$data$P_1 + (1 - Y_trt) * data_sample[[seed]]$data$P_0
+    Y_out <- Y_trt * data_sample[[seed]]$data$Y_1 + (1 - Y_trt) * data_sample[[seed]]$data$Y_0
+  }
   
   PS.fit <- glm(Y_trt~Xpred, family=binomial())
   PS <- predict(PS.fit, type="response")

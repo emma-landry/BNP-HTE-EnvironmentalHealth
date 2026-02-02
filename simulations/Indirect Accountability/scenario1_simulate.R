@@ -18,6 +18,8 @@ scenario_1 <- lapply(1:samples, function(c)
                          sigma_1 = rep(0.2,5),
                          n = n))
 
+load('simulations/Indirect Accountability/IA_scenario1.RData')
+
 # Run simulations
 R <- 3000
 R_burnin <- 2000
