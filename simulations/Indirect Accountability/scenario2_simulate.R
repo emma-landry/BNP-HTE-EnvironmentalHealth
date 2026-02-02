@@ -26,6 +26,48 @@ L_1 <- 12
 
 CDBMM_scenario_2 <- pbmclapply(1:samples, CDBMM_Gibbs, data_sample = scenario_2, n = n, mc.cores = 8)
 
+load('simulations/Indirect Accountability/IA_scenario2.RData')
+Sys.setenv(
+  OMP_NUM_THREADS = "1",
+  MKL_NUM_THREADS = "1",
+  OPENBLAS_NUM_THREADS = "1",
+  VECLIB_MAXIMUM_THREADS = "1"
+)
+
+cl <- makeCluster(4)
+clusterEvalQ(cl, {
+  library(bcf)
+})
+
+logfile <- "~/bcf_progress_scenario2.log"
+
+clusterExport(
+  cl,
+  varlist = c("BCF_sample", "scenario_2", "logfile"),
+  envir = environment()
+)
+
+BCF_scenario_2 <- parLapply(
+  cl,
+  1:samples,
+  function(c) {
+    cat(sprintf("START %d %s\n", c, Sys.time()),
+        file = logfile, append = TRUE)
+    
+    res <- BCF_sample(c, scenario_2, is_parallel = TRUE)
+    
+    cat(sprintf("END   %d %s\n", c, Sys.time()),
+        file = logfile, append = TRUE)
+    
+    res
+  }
+)
+
+save(BCF_scenario_2, file = '/Users/emmalandry/Documents/Falco GSR/Review Paper- CEHR/CausalBayes_Review/simulations/Indirect Accountability/BCF_scenario2.RData')
+
+stopCluster(cl)
+
+
 BCF_scenario_2 <- lapply(1:samples, function(s) {
   cat("Running sample", s, "\n")
   BCF_sample(s, data_sample = scenario_2)})
