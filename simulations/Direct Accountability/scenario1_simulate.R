@@ -15,9 +15,9 @@ n <- 500          # units for each sample
 samples <- 100    # repetition of each setting (number of samples)
 
 # Scenario 1 from BPCF paper
-scenario_1 <- lapply(1:samples, function(c) simulate_scenario1_DA(P = 7, n = n, seed = c))
+scenario_1 <- lapply(1:samples, function(c) simulate_scenario1_DA_alt(P = 7, n = n, seed = c))
 
-load("simulations/Direct Accountability/DA_scenario1.RData")
+load("simulations/Direct Accountability/DA_scenario1_alt.RData")
 
 BPCF_scenario1 <- pbmclapply(1:samples, function(c) {
   BPCF_sample(data_sample = scenario_1, n = n, seed = c, scenario1 = T) },

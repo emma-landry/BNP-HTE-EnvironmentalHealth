@@ -15,16 +15,16 @@ samples <- 100    # repetition of each setting (number of samples)
 
 # Scenario 1 from CASBAH paper
 scenario_2 <- lapply(1:samples, function(s) 
-                       prova = setup_sim_2cov(seed=s,
+                      prova=setup_sim_2cov(seed=s,
                        eta=c(1,2,3),
                        sigma_p=rep(0.05,3),
-                       allocation_0=c(1,2,2),
-                       allocation_1=c(1,3,3),
+                       allocation_0=c(2,2,2),
+                       allocation_1=c(1,2,3),
                        beta_0=c(1,2),
-                       beta_1=c(1,2,-1,0.5),
+                       beta_1=c(1,1.2,-1,1),
                        sigma_y=c(-0.5,0.1)))
 
-load("simulations/Direct Accountability/DA_scenario2.RData")
+load("simulations/Direct Accountability/DA_scenario2_alt.RData")
 
 # BPCF
 BPCF_scenario2 <- pbmclapply(1:samples, function(c) {
