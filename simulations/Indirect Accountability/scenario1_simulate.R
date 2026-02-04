@@ -27,7 +27,7 @@ R_burnin <- 2000
 L_0 <- 12
 L_1 <- 12
 
-CDBMM_scenario_1 <- pbmclapply(1:samples, CDBMM_Gibbs, data_sample = scenario_1, n = n, mc.cores = 8)
+CDBMM_scenario_1 <- pbmclapply(1:samples, CDBMM_Gibbs, data_sample = scenario_1, n = n, mc.cores = 10)
 
 Sys.setenv(
   OMP_NUM_THREADS = "1",
@@ -66,14 +66,6 @@ BCF_scenario_1 <- parLapply(
 )
 
 stopCluster(cl)
-
-BCF_scenario_1 <- pbmclapply(
-  1:samples,
-  BCF_sample,
-  data_sample = scenario_1,
-  is_parallel = TRUE,
-  mc.cores = 8
-)
 
 CART_scenario_1 <- pbmclapply(1:samples, CART, data_sample = scenario_1, estimated_Y = BCF_scenario_1, mc.cores = 8)
 

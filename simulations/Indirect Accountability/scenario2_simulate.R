@@ -25,7 +25,8 @@ R_burnin <- 2000
 L_0 <- 12
 L_1 <- 12
 
-CDBMM_scenario_2 <- pbmclapply(1:samples, CDBMM_Gibbs, data_sample = scenario_2, n = n, mc.cores = 8)
+CDBMM_scenario_2 <- pbmclapply(1:samples, CDBMM_Gibbs, data_sample = scenario_2, n = n, mc.cores = 10)
+save(CDBMM_scenario_2, file = '/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Indirect Accountability/CDBMM_scenario2.RData')
 
 Sys.setenv(
   OMP_NUM_THREADS = "1",
@@ -63,8 +64,6 @@ BCF_scenario_2 <- parLapply(
   }
 )
 
-save(BCF_scenario_2, file = '/Users/emmalandry/Documents/Falco GSR/Review Paper- CEHR/CausalBayes_Review/simulations/Indirect Accountability/BCF_scenario2.RData')
-
 stopCluster(cl)
 
 
@@ -72,4 +71,4 @@ BCF_scenario_2 <- lapply(1:samples, function(s) {
   cat("Running sample", s, "\n")
   BCF_sample(s, data_sample = scenario_2)})
 
-CART_scenario_2 <- pbmclapply(1:samples, CART, data_sample = scenario_1, estimated_Y = BCF_scenario_2, mc.cores = 8)
+CART_scenario_2 <- pbmclapply(1:samples, CART, data_sample = scenario_2, estimated_Y = BCF_scenario_2, mc.cores = 8)

@@ -315,14 +315,20 @@ Gibbs_CASDMM<-function(c, sim, scenario1 = F){
     
     # -----   P_MIS: post-treatent missing: P(1-t)   -----
     # level t=0 observed --> level T=1 missing
+    safe_multinom <- function(p, eps = 1e-12) {
+      p[!is.finite(p)] <- 0
+      p[p < eps] <- eps
+      p / sum(p)
+    }
+    
     om_0=sapply(T0, function(i) omega(X=matrix_X[i,],beta=beta_1))
     om_0[which(is.nan(om_0))]=0
-    p0=sapply(1:n0, function(i) (1:n_cluster)%*%(rmultinom(1,1,om_0[,i])))
+    p0=sapply(1:n0, function(i) (1:n_cluster)%*%(rmultinom(1,1, safe_multinom(om_0[,i]))))
     P_mis[T0]=rnorm(T0,eta[p0],sqrt(sigma[p0]))
     # level t=1 observed --> level T=0 missing
     om_1=sapply(T1, function(i) omega(X=matrix_X[i,],beta=beta_0))
     om_1[which(is.nan(om_1))]=0
-    p1=sapply(1:n1, function(i) (1:n_cluster)%*%(rmultinom(1,1,om_1[,i])))
+    p1=sapply(1:n1, function(i) (1:n_cluster)%*%(rmultinom(1,1, safe_multinom(om_1[,i]))))
     v_2=exp(lambda[1]+lambda[2]*P_obs_1)/((theta_1[3]+theta_1[4]*P_obs_1)^2)
     var_inv=1/sigma[p1]+1/v_2
     m_2=(Y_obs_1-theta_1[1]-theta_1[2]*P_obs_1)/(theta_1[3]+theta_1[4]*P_obs_1)
