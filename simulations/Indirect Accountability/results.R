@@ -1,3 +1,9 @@
+library(ggplot2)
+library(patchwork)
+library(grid)
+library(tidyr)
+library(dplyr)
+
 load('simulations/Indirect Accountability/IA_scenario1.RData')
 load('simulations/Indirect Accountability/IA_scenario2.RData')
 load('simulations/Indirect Accountability/CDBMM_scenario1.RData')
@@ -119,9 +125,6 @@ mse_ATE_BCF_2 <- sapply(1:samples, function(s)
 )
 
 # Figures
-
-library(ggplot2)
-
 bias_df <- rbind(
   data.frame(
     value    = bias_ATE_CDBMM_1,
@@ -154,21 +157,33 @@ bias_df$Scenario <- ifelse(
 bias_df$Scenario <- factor(bias_df$Scenario)
 
 
-ggplot(bias_df, aes(x = Method, y = value, fill = Method)) +
-  geom_boxplot(width = 0.6, outlier.size = 0.8) +
-  geom_hline(yintercept = 0, color = "red", linewidth = 0.7) +
-  facet_wrap(~ Scenario, scales = "free_y") +
-  labs(
-    y = "Bias (ATE)",
-    x = NULL
-  ) +
-  theme_classic() +
-  theme(
-    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
-    legend.position = "none",
-    strip.text = element_text(size = 12)
+ylims_df <- bias_df %>%
+  group_by(Scenario) %>%
+  summarise(
+    lim = max(abs(value), na.rm = TRUE)
   )
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_bias_ATE.pdf', width = 10, height = 4.5)
+
+ggplot(bias_df, aes(x = Method, y = value, fill = Method,color = Method)) +
+  geom_boxplot(width = 0.6, outlier.size = 0.8, alpha = 0.35, linewidth = 0.9) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.8, linetype = "dashed") +
+  facet_wrap(~ Scenario, scales = "free_y") +
+  scale_y_continuous(limits = function(x) {
+      lim <- max(abs(x), na.rm = TRUE)
+      c(-lim, lim)}) +
+  scale_fill_manual(values = c("BCF"   = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  scale_color_manual(values = c("BCF"   = "#1F77B4","CDBMM" = "#FF7F0E")) +
+  labs(y = "Bias (ATE)", x = NULL) +
+  theme_classic() +
+  theme(panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+        panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(color = "black",fill = NA,linewidth = 0.8),
+        legend.position = "none",
+        strip.text = element_text(size = 12))
+
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_bias_ATE.pdf', width = 10, height = 4.5)
+ggsave('/Users/emmalandry/Desktop/IA_bias_ATE.pdf', width = 8, height = 3.7)
 
 rmse_df <- rbind(
   data.frame(
@@ -193,7 +208,6 @@ rmse_df <- rbind(
   )
 )
 
-# Flip scenario labels (same as bias)
 rmse_df$Scenario <- ifelse(
   rmse_df$Scenario == "Scenario 1",
   "Scenario 2",
@@ -202,21 +216,25 @@ rmse_df$Scenario <- ifelse(
 
 rmse_df$Scenario <- factor(rmse_df$Scenario)
 
-ggplot(rmse_df, aes(x = Method, y = value, fill = Method)) +
-  geom_boxplot(width = 0.6, outlier.size = 0.8) +
+ggplot(rmse_df, aes(x = Method, y = value, fill = Method, color = Method)) +
+  geom_boxplot(width = 0.6, outlier.size = 0.8, alpha = 0.35, linewidth = 0.9) +
   facet_wrap(~ Scenario, scales = "free_y") +
-  labs(
-    y = "RMSE (ATE)",
-    x = NULL
-  ) +
+  scale_fill_manual(values = c( "BCF"   = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  scale_color_manual(values = c("BCF"   = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  labs(y = "RMSE (ATE)", x = NULL) +
   theme_classic() +
-  theme(
-    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
-    legend.position = "none",
-    strip.text = element_text(size = 12)
-  )
+  theme(panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+        panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+        legend.position = "none",
+        strip.text = element_text(size = 12))
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_rmse_ATE.pdf', width = 10, height = 4.5)
+
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_rmse_ATE.pdf', width = 10, height = 4.5)
+ggsave('/Users/emmalandry/Desktop/IA_rmse_ATE.pdf', width = 8, height = 3.7)
+
 # CATE ---------------
 # Bias for CATE
 bias_CATE_CDBMM_1 <- sapply(1:samples, function(s)
@@ -325,7 +343,7 @@ ggplot(bias_CATE_df, aes(x = Method, y = value, fill = Method)) +
     strip.text = element_text(size = 12)
   )
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_bias_CATE.pdf', width = 10, height = 4.5)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_bias_CATE.pdf', width = 10, height = 4.5)
 
 rmse_CATE_df <- rbind(
   data.frame(
@@ -372,7 +390,7 @@ ggplot(rmse_CATE_df, aes(x = Method, y = value, fill = Method)) +
     strip.text = element_text(size = 12)
   )
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_rmse_CATE.pdf', width = 10, height = 4.5)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_rmse_CATE.pdf', width = 10, height = 4.5)
 
 # GATE ------
 # Bias for CATE
@@ -488,7 +506,7 @@ ggplot(bias_GATE_df, aes(x = Method, y = value, fill = Method)) +
     strip.text = element_text(size = 12)
   )
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_bias_GATE.pdf', width = 10, height = 4.5)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_bias_GATE.pdf', width = 10, height = 4.5)
 
 rmse_GATE_df <- rbind(
   data.frame(
@@ -535,6 +553,302 @@ ggplot(rmse_GATE_df, aes(x = Method, y = value, fill = Method)) +
     strip.text = element_text(size = 12)
   )
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_rmse_GATE.pdf', width = 10, height = 4.5)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/IA_rmse_GATE.pdf', width = 10, height = 4.5)
+
+# Group histograms -----
+count_groups <- function(groups) {
+  length(unique(groups))
+}
+
+ngroups_s1 <- data.frame(
+  n_groups = c(sapply(1:samples, function(s) 
+                      count_groups(compute_CDBMM_groups(CDBMM_scenario_1[[s]]$partition))),
+              sapply(1:samples, function(s)
+                     count_groups(CART_scenario_1[[s]]$partition))),
+  Method   = rep(c("CDBMM", "BCF"), each = samples),
+  Scenario = "Scenario 1"
+)
+
+ngroups_s2 <- data.frame(
+  n_groups = c(sapply(1:samples, function(s)
+                      count_groups(compute_CDBMM_groups(CDBMM_scenario_2[[s]]$partition))),
+               sapply(1:samples, function(s)
+                      count_groups(CART_scenario_2[[s]]$partition))),
+  Method   = rep(c("CDBMM", "BCF"), each = samples),
+  Scenario = "Scenario 2")
+
+ngroups_df <- rbind(ngroups_s1, ngroups_s2)
+
+ngroups_df$Scenario <- ifelse(
+  ngroups_df$Scenario == "Scenario 1",
+  "Scenario 2",
+  "Scenario 1"
+)
+
+ngroups_df$Scenario <- factor(ngroups_df$Scenario)
+
+ggplot(ngroups_df, aes(x = n_groups, fill = Method)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 binwidth = 1,
+                 position = "identity",
+                 alpha = 0.35,
+                 color = NA) +
+  geom_segment(data = data.frame(Scenario = "Scenario 2", x = 5),
+               aes(x = x, xend = x, y = 0, yend = 1),
+               inherit.aes = FALSE,
+               linetype = "dashed",
+               linewidth = 0.9,
+               color = "black") +
+  facet_wrap(~ Scenario, scales = "free") +
+  scale_fill_manual(values = c("BCF"   = "#1F77B4","CDBMM" = "#FF7F0E")) +
+  scale_x_continuous(breaks = function(x) pretty(x, n = 5)) +
+  labs(x = "Number of groups", y = "Density", fill = "Method") +
+  theme_classic() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    strip.text = element_text(size = 12),
+    legend.position = "top")
+
+ggsave('/Users/emmalandry/Desktop/IA_groups.pdf', width = 8, height = 4.1)
+
+# Threee panel figures -----
+bias_s1 <- subset(bias_df, Scenario == "Scenario 1")
+bias_s2 <- subset(bias_df, Scenario == "Scenario 2")
+
+rmse_s1 <- subset(rmse_df, Scenario == "Scenario 1")
+rmse_s2 <- subset(rmse_df, Scenario == "Scenario 2")
+
+ngroups_s1 <- subset(ngroups_df, Scenario == "Scenario 1")
+ngroups_s2 <- subset(ngroups_df, Scenario == "Scenario 2")
+
+bias_s1$Panel <- "Bias"
+
+bias_plot_s1 <- ggplot(
+  bias_s1,
+  aes(x = Method, y = value, fill = Method, color = Method)
+) +
+  geom_boxplot(width = 0.6, outlier.size = 0.8, alpha = 0.35, linewidth = 0.9) +
+  geom_hline(yintercept = 0, linetype = "dashed", linewidth = 0.8) +
+  scale_y_continuous(limits = function(x) {
+    lim <- max(abs(x), na.rm = TRUE)
+    c(-lim, lim)
+  }) +
+  scale_fill_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  scale_color_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  labs(x = NULL, y = NULL) +
+  facet_wrap(~ Panel) +
+  theme_classic() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    legend.position = "none",
+    
+    strip.text = element_text(size = 13),
+    strip.background = element_rect(
+      fill = NA,
+      color = "black",
+      linewidth = 0.8
+    )
+  )
+
+rmse_s1$Panel <- "RMSE"
+
+rmse_plot_s1 <- ggplot(
+  rmse_s1,
+  aes(x = Method, y = value, fill = Method, color = Method)
+) +
+  geom_boxplot(width = 0.6, outlier.size = 0.8, alpha = 0.35, linewidth = 0.9) +
+  scale_fill_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  scale_color_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  labs(x = NULL, y = NULL) +
+  facet_wrap(~ Panel) +
+  theme_classic() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    legend.position = "none",
+    strip.text = element_text(size = 13),
+    strip.background = element_rect(
+      fill = NA,
+      color = "black",
+      linewidth = 0.8
+    )
+  )
+
+ngroups_s1$Panel <- "Number of groups distribution"
+
+ngroups_plot_s1 <- ggplot(
+  ngroups_s1,
+  aes(x = n_groups, fill = Method)
+) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 1,
+    position = "identity",
+    alpha = 0.35,
+    color = NA
+  )  +
+  scale_fill_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  scale_x_continuous(breaks = function(x) pretty(x, n = 5)) +
+  labs(x = "", y = NULL, fill = NULL) +
+  facet_wrap(~ Panel) +
+  theme_classic() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    
+    legend.position = c(0.75, 0.8),
+    legend.background = element_blank(),
+    
+    strip.text = element_text(size = 13),
+    strip.background = element_rect(
+      fill = NA,
+      color = "black",
+      linewidth = 0.8
+    )
+  )
+
+fig_scenario1 <- bias_plot_s1 | rmse_plot_s1 | ngroups_plot_s1
+fig_scenario1
+
+ggsave('/Users/emmalandry/Desktop/IA_scenario1.pdf', width = 12, height = 4)
+
+bias_s2$Panel <- "Bias"
+
+bias_plot_s2 <- ggplot(
+  bias_s2,
+  aes(x = Method, y = value, fill = Method, color = Method)
+) +
+  geom_boxplot(width = 0.6, outlier.size = 0.8, alpha = 0.35, linewidth = 0.9) +
+  geom_hline(yintercept = 0, linetype = "dashed", linewidth = 0.8) +
+  scale_y_continuous(limits = function(x) {
+    lim <- max(abs(x), na.rm = TRUE)
+    c(-lim, lim)
+  }) +
+  scale_fill_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  scale_color_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  labs(x = NULL, y = NULL) +
+  facet_wrap(~ Panel) +
+  theme_classic() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    legend.position = "none",
+    
+    strip.text = element_text(size = 13),
+    strip.background = element_rect(
+      fill = NA,
+      color = "black",
+      linewidth = 0.8
+    )
+  )
+
+rmse_s2$Panel <- "RMSE"
+
+rmse_plot_s2 <- ggplot(
+  rmse_s2,
+  aes(x = Method, y = value, fill = Method, color = Method)
+) +
+  geom_boxplot(width = 0.6, outlier.size = 0.8, alpha = 0.35, linewidth = 0.9) +
+  scale_fill_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  scale_color_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  labs(x = NULL, y = NULL) +
+  facet_wrap(~ Panel) +
+  theme_classic() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    legend.position = "none",
+    
+    strip.text = element_text(size = 13),
+    strip.background = element_rect(
+      fill = NA,
+      color = "black",
+      linewidth = 0.8
+    )
+  )
+
+ngroups_s2$Panel <- "Number of groups distribution"
+
+ngroups_plot_s2 <- ggplot(
+  ngroups_s2,
+  aes(x = n_groups, fill = Method)
+) +
+  geom_histogram(
+    aes(y = after_stat(density)),
+    binwidth = 1,
+    position = "identity",
+    alpha = 0.35,
+    color = NA
+  ) +
+  annotate(
+    "segment",
+    x = 5, xend = 5,
+    y = 0, yend = 1,
+    linetype = "dashed",
+    linewidth = 0.9
+  ) +
+  scale_fill_manual(values = c("BCF" = "#1F77B4", "CDBMM" = "#FF7F0E")) +
+  scale_x_continuous(breaks = function(x) pretty(x, n = 5)) +
+  labs(x = "", y = NULL, fill = NULL) +
+  facet_wrap(~ Panel) +
+  theme_classic() +
+  theme(
+    panel.grid.major.y = element_line(color = "grey80", linewidth = 0.4),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.25),
+    panel.border = element_rect(color = "black", fill = NA, linewidth = 0.8),
+    
+    legend.position = c(0.35, 0.8),
+    legend.background = element_blank(),
+    
+    strip.text = element_text(size = 13),
+    strip.background = element_rect(
+      fill = NA,
+      color = "black",
+      linewidth = 0.8
+    )
+  )
+fig_scenario2 <- bias_plot_s2 | rmse_plot_s2 | ngroups_plot_s2
+fig_scenario2
+ggsave('/Users/emmalandry/Desktop/IA_scenario2.pdf', width = 12, height = 4)
+
+scenario_title <- function(label) {
+  ggplot() +
+    annotate(
+      "text",
+      x = 0.5, y = 0.5,
+      label = label,
+      size = 5,
+      fontface = "bold"
+    ) +
+    theme_void() +
+    theme(
+      plot.margin = margin(b = 6, t = 6)
+    )
+}
+
+row1 <- bias_plot_s1 | rmse_plot_s1 | ngroups_plot_s1
+row2 <- bias_plot_s2 | rmse_plot_s2 | ngroups_plot_s2
 
 
+fig_both <- 
+  scenario_title("Scenario 1") /
+  row1 /
+  scenario_title("Scenario 2") /
+  row2 +
+  plot_layout(
+    heights = c(0.12, 1, 0.12, 1)
+  )
+
+fig_both
+
+ggsave('/Users/emmalandry/Desktop/IA_results.pdf', width = 12, height = 9)
