@@ -13,7 +13,7 @@ source("simulations/Direct Accountability/BPCF_sample.R")
 n <- 500          # units for each sample
 samples <- 100    # repetition of each setting (number of samples)
 
-# Scenario 1 from CASBAH paper
+# Scenario 2 from CASBAH paper
 scenario_2 <- lapply(1:samples, function(s) 
                       prova=setup_sim_2cov(seed=s,
                        eta=c(1,2,3),
@@ -29,9 +29,9 @@ load("simulations/Direct Accountability/DA_scenario2_alt.RData")
 # BPCF
 BPCF_scenario2 <- pbmclapply(1:samples, function(c) {
   BPCF_sample(data_sample = scenario_2, n = n, seed = c, scenario1 = F) },
-  mc.cores = 8)
+  mc.cores = 10)
 
-save(BPCF_scenario2, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/BPCF_scenario2.RData")
+save(BPCF_scenario2, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/BPCF_scenario2_alt.RData")
 
 
 # CASBAH
@@ -43,4 +43,4 @@ CASBAH_scenario2 <- pbmclapply(1:samples, function(c) {
   Gibbs_CASDMM(c = c, sim = scenario_2, scenario1 = F) },
   mc.cores = 10)
 
-save(CASBAH_scenario2, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/CASBAH_scenario2.RData")
+save(CASBAH_scenario2, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/CASBAH_scenario2_alt.RData")

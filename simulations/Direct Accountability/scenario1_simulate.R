@@ -23,6 +23,9 @@ BPCF_scenario1 <- pbmclapply(1:samples, function(c) {
   BPCF_sample(data_sample = scenario_1, n = n, seed = c, scenario1 = T) },
   mc.cores = 10)
 
+save(BPCF_scenario1, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/BPCF_scenario1_alt.RData")
+
+
 
 # CASBAH
 R <- 3000
@@ -32,7 +35,7 @@ n_cluster <- 10 # max number of clusters
 CASBAH_scenario1 <- pbmclapply(1:samples, function(c) {
   Gibbs_CASDMM(c = c, sim = scenario_1, scenario1 = T) },
   mc.cores = 10)
-save(CASBAH_scenario1, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/CASBAH_scenario1.RData")
+save(CASBAH_scenario1, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/CASBAH_scenario1_alt.RData")
 
 
 
