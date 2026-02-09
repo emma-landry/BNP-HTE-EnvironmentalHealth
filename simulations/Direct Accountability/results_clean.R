@@ -144,7 +144,7 @@ ggplot(
   )
 
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_bias_Y_ATE.pdf', width = 8, height = 3.7)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_bias_Y_ATE.pdf', width = 8, height = 3.7)
 
 rmse_df_outcome <- rbind(
   data.frame(value = sqrt(mse_ATE_BPCF_1),   Method = "BPCF",   Scenario = "Scenario 1"),
@@ -178,7 +178,7 @@ ggplot(
     plot.title = element_text(hjust = 0.5, size = 14)
   )
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_rmse_Y_ATE.pdf', width = 8, height = 3.7)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_rmse_Y_ATE.pdf', width = 8, height = 3.7)
 
 # Post-treatment ATE -----
 # Bias
@@ -258,7 +258,7 @@ ggplot(
     plot.title = element_text(hjust = 0.5, size = 14)
   )
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_bias_P_ATE.pdf', width = 8, height = 3.7)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_bias_P_ATE.pdf', width = 8, height = 3.7)
 
 rmse_PT_df <- rbind(
   data.frame(value = sqrt(mse_PT_BPCF_1),   Method = "BPCF",   Scenario = "Scenario 1"),
@@ -292,7 +292,7 @@ ggplot(
     plot.title = element_text(hjust = 0.5, size = 14)
   )
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_rmse_P_ATE.pdf', width = 8, height = 3.7)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_rmse_P_ATE.pdf', width = 8, height = 3.7)
 
 # Group ----
 # Get groups
@@ -544,7 +544,7 @@ bias_plot_s2 <- ggplot(
     legend.background = element_blank()
   )
 bias_plot_s1 | bias_plot_s2
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_bias_groups_ATE.pdf', width = 8, height = 3.7)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_bias_groups_ATE.pdf', width = 8, height = 3.7)
 
 rmse_group_df <- rbind(
   
@@ -688,7 +688,7 @@ rmse_plot_s2 <- ggplot(
   )
 
 rmse_plot_s1 | rmse_plot_s2
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_rmse_groups_ATE.pdf', width = 8, height = 3.7)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_rmse_groups_ATE.pdf', width = 8, height = 3.7)
 
 # Three panels
 bias_Y_s1 <- subset(bias_df_outcome, Scenario == "Scenario 1")
@@ -857,6 +857,6 @@ fig_final <-
 
 fig_final
 
-ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_bias_panel.pdf', width = 12, height = 9)
+#ggsave('/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/DA_bias_panel.pdf', width = 12, height = 9)
 
 
