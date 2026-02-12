@@ -7,7 +7,7 @@ source("code/PSBayes/simulation_functions.R")
 source("code/PSBayes/CASBAH.R")
 source("simulations/Direct Accountability/BPCF_sample.R")
 
-#sourceCpp("code/BPCF/MCMC_main.cpp", rebuild = T, verbose = T)
+sourceCpp("code/BPCF/MCMC_main.cpp", rebuild = T, verbose = T)
 
 # Simulation set-up
 n <- 500          # units for each sample
@@ -24,15 +24,11 @@ scenario_2 <- lapply(1:samples, function(s)
                        beta_1=c(1,1.2,-1,1),
                        sigma_y=c(-0.5,0.1)))
 
-load("simulations/Direct Accountability/DA_scenario2_alt.RData")
 
 # BPCF
 BPCF_scenario2 <- pbmclapply(1:samples, function(c) {
   BPCF_sample(data_sample = scenario_2, n = n, seed = c, scenario1 = F) },
   mc.cores = 10)
-
-save(BPCF_scenario2, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/BPCF_scenario2_alt.RData")
-
 
 # CASBAH
 R <- 3000
@@ -43,4 +39,3 @@ CASBAH_scenario2 <- pbmclapply(1:samples, function(c) {
   Gibbs_CASDMM(c = c, sim = scenario_2, scenario1 = F) },
   mc.cores = 10)
 
-save(CASBAH_scenario2, file = "/Users/emmalandry/Documents/Falco_GSR/ReviewPaper_CEHR/CausalBayes_Review/simulations/Direct Accountability/CASBAH_scenario2_alt.RData")

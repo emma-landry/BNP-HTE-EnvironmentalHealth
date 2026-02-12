@@ -1,3 +1,4 @@
+# Scenario 1 BPCF paper
 simulate_scenario1_DA <- function(P = 7, n = 300, seed) {
   cov <- list()
   for(i in 1:P){
@@ -29,6 +30,7 @@ simulate_scenario1_DA <- function(P = 7, n = 300, seed) {
               S = S))
 } 
 
+# Scenario 2 BPCF paper
 simulate_scenario1_DA_alt <- function(P = 5, n = 300, seed) {
   cov <- list()
   for(i in 1:2){

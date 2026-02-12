@@ -18,9 +18,9 @@ scenario_1 <- lapply(1:samples, function(c)
                          sigma_1 = rep(0.2,5),
                          n = n))
 
-load('simulations/Indirect Accountability/IA_scenario1.RData')
-
 # Run simulations
+
+#CDBMM
 R <- 3000
 R_burnin <- 2000
 
@@ -29,6 +29,7 @@ L_1 <- 12
 
 CDBMM_scenario_1 <- pbmclapply(1:samples, CDBMM_Gibbs, data_sample = scenario_1, n = n, mc.cores = 10)
 
+#BCF 
 Sys.setenv(
   OMP_NUM_THREADS = "1",
   MKL_NUM_THREADS = "1",
