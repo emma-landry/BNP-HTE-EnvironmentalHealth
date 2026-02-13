@@ -9,7 +9,7 @@ In this repository, we provide code to reproduce simulation results in the paper
  
 - **`PSBayes`** folder: contains the necessary code from the <a href=https://github.com/dafzorzetto/PSBayes/tree/main> _PSBayes repository_</a>, associated with the paper <a href=https://arxiv.org/pdf/2405.17669> _"Bayesian Nonparametrics for Principal Stratification with Continuous Post-Treatment Variable"_</a>, by D. Zorzetto, A. Canale, F. Mealli, F. Dominici, and F. J. Bargagli-Stoffi.
 
-### Simulation replications code i the **`simulations`** folder:
+### Simulation replications code in the **`simulations`** folder:
 - **`Direct Accountability`** folder: contains code to reproduce results from the "Direct Accountability: Evaluating Specific Interactions" section of the manuscript.
 
 - **`Indirect Accountability`** folder: contains code to reproduce results from the "Indirect Accountability: Exposrue-Response Heterogeneity" section of the manuscript.
