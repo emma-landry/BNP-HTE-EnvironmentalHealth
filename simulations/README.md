@@ -16,9 +16,9 @@ effects in air pollution epidemiology".
 
 - `scenario2_function.R`: function to simulate data for Scenario 1, as defined in the manuscript.
 
-- `scenario1_simulate.R`: code to simulate data for Scenario 2, run simulations using the BPCF and CASBAH models.
+- `scenario1_simulate.R`: code to simulate data for Scenario 2, run simulations using the BCF and CDBMM models.
 
-- `scenario2_simulate.R`: code to simulate data for Scenario 1, run simulations using the BPCF and CASBAH models.
+- `scenario2_simulate.R`: code to simulate data for Scenario 1, run simulations using the BCF and CDBMM models.
 
 - `results.R`: code to reproduce the figures presented in the manuscript.
 
