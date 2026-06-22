@@ -14,7 +14,7 @@ library(BNPmix)
 
 ###################################################################################
 
-Gibbs_CASDMM<-function(c, sim, scenario1 = F){
+Gibbs_CASDMM<-function(c, sim, scenario1 = F, median = T){
   
   # set seed for riproducibility
   set.seed(c)
@@ -436,16 +436,32 @@ Gibbs_CASDMM<-function(c, sim, scenario1 = F){
   
   print(paste0("sample ",c, " done"))
   
-  return(list(#post_eta=post_eta, post_var=post_var,
-    #chains_theta=post_theta,
-    S_all_cluster=S_all_cluster, S_strata_cluster=S_strata_cluster,
-    post_theta=apply(post_theta,1,mean), 
-    post_lambda=apply(post_lambda,1,mean),
-    #acc_rate_0=acc_0/R, acc_rate_1=acc_1/R,
-    #cluster_allocation_0=cluster_allocation_0, cluster_allocation_1=cluster_allocation_1,
-    post_P_0_imp=apply(post_P_0,1,median, na.rm=TRUE), 
-    post_P_1_imp=apply(post_P_1,1,median, na.rm=TRUE),
-    post_Y_0_imp=apply(post_Y_0_imp,1,median, na.rm=TRUE), 
-    post_Y_1_imp=apply(post_Y_1_imp,1,median, na.rm=TRUE)
-  ))
+  if (median == T){
+    return(list(#post_eta=post_eta, post_var=post_var,
+      #chains_theta=post_theta,
+      S_all_cluster=S_all_cluster, S_strata_cluster=S_strata_cluster,
+      post_theta=apply(post_theta,1,mean), 
+      post_lambda=apply(post_lambda,1,mean),
+      #acc_rate_0=acc_0/R, acc_rate_1=acc_1/R,
+      #cluster_allocation_0=cluster_allocation_0, cluster_allocation_1=cluster_allocation_1,
+      post_P_0_imp=apply(post_P_0,1,median, na.rm=TRUE), 
+      post_P_1_imp=apply(post_P_1,1,median, na.rm=TRUE),
+      post_Y_0_imp=apply(post_Y_0_imp,1,median, na.rm=TRUE), 
+      post_Y_1_imp=apply(post_Y_1_imp,1,median, na.rm=TRUE)
+    ))
+  } else {
+    return(list(#post_eta=post_eta, post_var=post_var,
+      #chains_theta=post_theta,
+      S_all_cluster=S_all_cluster, S_strata_cluster=S_strata_cluster,
+      post_theta=post_theta, 
+      post_lambda=post_lambda,
+      #acc_rate_0=acc_0/R, acc_rate_1=acc_1/R,
+      #cluster_allocation_0=cluster_allocation_0, cluster_allocation_1=cluster_allocation_1,
+      post_P_0_imp=post_P_0, 
+      post_P_1_imp=post_P_1,
+      post_Y_0_imp=post_Y_0_imp, 
+      post_Y_1_imp=post_Y_1_imp
+    ))
+  }
+  
 }

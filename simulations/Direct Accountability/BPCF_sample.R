@@ -1,4 +1,4 @@
-BPCF_sample <- function(data_sample, n, seed, scenario1 = T) {
+BPCF_sample <- function(data_sample, n, seed, scenario1 = T, median = T) {
   set.seed(seed)
   n.iter <- 10000
   
@@ -59,13 +59,20 @@ BPCF_sample <- function(data_sample, n, seed, scenario1 = T) {
               n.iter,
               sigma_mu_m_tau_sigma, sigma_mu_m_mu_sigma, sigma_mu_y_tau_sigma, sigma_mu_y_mu_sigma)
   
-  out <- list(
-    S_med  = apply(rcpp$predicted_S,  1, median, na.rm = TRUE),
-    Y1_med = apply(rcpp$predicted_Y1, 1, median, na.rm = TRUE),
-    Y0_med = apply(rcpp$predicted_Y0, 1, median, na.rm = TRUE),
-    M1_med = apply(rcpp$predicted_M1, 1, median, na.rm = TRUE),
-    M0_med = apply(rcpp$predicted_M0, 1, median, na.rm = TRUE)
-  )
+  if (median == T){
+    out <- list(S_med  = apply(rcpp$predicted_S,  1, median, na.rm = TRUE),
+                Y1_med = apply(rcpp$predicted_Y1, 1, median, na.rm = TRUE),
+                Y0_med = apply(rcpp$predicted_Y0, 1, median, na.rm = TRUE),
+                M1_med = apply(rcpp$predicted_M1, 1, median, na.rm = TRUE),
+                M0_med = apply(rcpp$predicted_M0, 1, median, na.rm = TRUE))
+  } else {
+    out <- list(S_med  = rcpp$predicted_S,
+                Y1_med = rcpp$predicted_Y1,
+                Y0_med = rcpp$predicted_Y0,
+                M1_med = rcpp$predicted_M1, 
+                M0_med = rcpp$predicted_M0)
+  }
+  
   
   return(out)
 }

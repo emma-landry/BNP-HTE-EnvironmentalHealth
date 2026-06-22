@@ -70,7 +70,7 @@ bart_sample<-function(c,data_sample){
 #########################################################################
 
 # function to estimate the BCF and to extrapolate the quantities of interest
-BCF_sample<-function(c,data_sample, is_parallel = F){
+BCF_sample<-function(c,data_sample, is_parallel = F, mean = T){
   
   # set seed for riproducibility
   set.seed(c)
@@ -111,7 +111,12 @@ BCF_sample<-function(c,data_sample, is_parallel = F){
   bcf_tau <- bcf(Y_obs, T_level, X, X, pihat, 
                  nburn = 1000, nsim = 1000)
   
-  return(list(tau=apply(bcf_tau$tau,2,mean)))
+  if (mean == T){
+    return(list(tau=apply(bcf_tau$tau,2,mean)))
+  } else{
+    return(list(tau=bcf_tau$tau))
+  }
+  
 }
 
 #########################################################################
